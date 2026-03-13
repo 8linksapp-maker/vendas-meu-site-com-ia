@@ -15,13 +15,13 @@ const { linkBase, linkPro } = Astro.props;
     </p>
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
       <a href={linkBase}
-        class="font-heading font-bold px-8 py-4 rounded-xl text-white text-lg transition-all hover:scale-105"
-        style="background: linear-gradient(135deg, #6366F1, #818CF8); box-shadow: 0 8px 32px rgba(99,102,241,0.35);">
+        class="font-heading font-bold px-8 py-4 rounded-xl text-white text-lg transition-all hover:scale-105 w-full sm:w-auto text-center"
+        style="background: linear-gradient(135deg, #6366F1, #818CF8); box-shadow: 0 8px 32px rgba(99,102,241,0.35); min-height: 56px; display: flex; align-items: center; justify-content: center;">
         Plano Base — R$497
       </a>
       <a href={linkPro}
-        class="font-heading font-bold px-8 py-4 rounded-xl text-lg transition-all hover:scale-105"
-        style="border: 1px solid rgba(99,102,241,0.5); color: #A5B4FC;">
+        class="font-heading font-bold px-8 py-4 rounded-xl text-lg transition-all hover:scale-105 w-full sm:w-auto text-center"
+        style="border: 1px solid rgba(99,102,241,0.5); color: #A5B4FC; min-height: 56px; display: flex; align-items: center; justify-content: center;">
         Plano Pro — R$997
       </a>
     </div>

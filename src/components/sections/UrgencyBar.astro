@@ -5,10 +5,9 @@ interface Props { text: string; active: boolean; }
 const { text, active } = Astro.props;
 ---
 {active && (
-  <div class="bg-indigo/90 backdrop-blur text-white text-center py-2.5 px-4 text-sm font-semibold sticky top-0 z-50" style="background: linear-gradient(90deg, #4F46E5, #6366F1, #818CF8);">
-    <span class="opacity-90">⚡</span> {text}
-    &nbsp;—&nbsp;
-    <span id="urgency-timer" class="font-bold tabular-nums">carregando...</span>
+  <div class="text-white text-center py-2 px-4 text-sm font-semibold sticky top-0 z-50 flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 leading-snug" style="background: linear-gradient(90deg, #4F46E5, #6366F1, #818CF8); min-height: 40px;">
+    <span>⚡ {text}</span>
+    <span class="font-bold tabular-nums" id="urgency-timer">carregando...</span>
   </div>
 )}
 
