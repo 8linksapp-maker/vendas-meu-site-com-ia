@@ -1,0 +1,53 @@
+---
+// layouts/PageLayout.astro
+// Layout base da página de vendas pública.
+// Importa fontes Google (Sora + Inter), Tailwind e estilos globais.
+// O Tailwind NÃO é injetado globalmente (applyBaseStyles: false no config)
+// — importamos aqui apenas para a página pública, isolando o admin.
+import '../styles/tailwind.css';
+interface Props { title?: string; description?: string; }
+const { title = 'Meu Site Com IA — Bruno Medeiros', description = 'Crie sites profissionais com IA em 5 minutos. Sem programar, sem WordPress, sem pagar hospedagem.' } = Astro.props;
+---
+<!doctype html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    body { background: #080810; color: #fff; font-family: 'Inter', sans-serif; }
+    .font-heading { font-family: 'Sora', sans-serif; }
+    .gradient-text {
+      background: linear-gradient(135deg, #fff 30%, #A5B4FC);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-indigo {
+      background: linear-gradient(135deg, #6366F1, #A5B4FC);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .glow { box-shadow: 0 0 40px rgba(99,102,241,0.15); }
+    .glow-sm { box-shadow: 0 0 20px rgba(99,102,241,0.1); }
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #1E1E2E 20%, #1E1E2E 80%, transparent);
+    }
+    /* Decorative grid bg */
+    .grid-bg {
+      background-image: linear-gradient(rgba(99,102,241,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(99,102,241,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+  </style>
+</head>
+<body class="antialiased">
+  <slot />
+</body>
+</html>

@@ -1,0 +1,30 @@
+---
+// sections/FinalCTA.astro
+// CTA final da página — repetição da oferta com urgência.
+interface Props { linkBase: string; linkPro: string; }
+const { linkBase, linkPro } = Astro.props;
+---
+<section class="py-24 px-6 relative overflow-hidden">
+  <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse at center, rgba(99,102,241,0.08) 0%, transparent 70%);"></div>
+  <div class="max-w-3xl mx-auto text-center relative z-10">
+    <h2 class="font-heading font-extrabold text-3xl md:text-5xl mb-6 gradient-text leading-tight">
+      A janela está aberta.<br/>Mas não vai ficar.
+    </h2>
+    <p class="text-lg mb-10 max-w-xl mx-auto" style="color: rgba(255,255,255,0.6);">
+      Quando todo mundo souber fazer isso, o diferencial some. Quem entrar agora sai na frente.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href={linkBase}
+        class="font-heading font-bold px-8 py-4 rounded-xl text-white text-lg transition-all hover:scale-105"
+        style="background: linear-gradient(135deg, #6366F1, #818CF8); box-shadow: 0 8px 32px rgba(99,102,241,0.35);">
+        Plano Base — R$497
+      </a>
+      <a href={linkPro}
+        class="font-heading font-bold px-8 py-4 rounded-xl text-lg transition-all hover:scale-105"
+        style="border: 1px solid rgba(99,102,241,0.5); color: #A5B4FC;">
+        Plano Pro — R$997
+      </a>
+    </div>
+    <p class="mt-8 text-sm" style="color: #6B7280;">🛡️ Garantia de 7 dias · Acesso imediato · Sem risco</p>
+  </div>
+</section>

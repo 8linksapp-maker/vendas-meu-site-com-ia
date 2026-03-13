@@ -1,0 +1,212 @@
+---
+// pages/admin/testimonials.astro
+// Painel admin: edição de depoimentos com preview e troca de imagem.
+// Upload: o usuário coloca o arquivo em public/images/ e informa o caminho.
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import Field from '../../components/admin/Field.astro';
+import { SESSION_COOKIE, verifyToken } from '../../utils/auth';
+
+const token = Astro.cookies.get(SESSION_COOKIE)?.value || '';
+const valid = await verifyToken(token);
+if (!valid) return Astro.redirect('/admin/login');
+
+const raw = readFileSync(join(process.cwd(), 'src/data/content.json'), 'utf-8');
+const c = JSON.parse(raw);
+const saved = Astro.url.searchParams.get('saved') === '1';
+---
+<AdminLayout title="Depoimentos — Admin">
+  <h1>◉ Depoimentos</h1>
+
+  {saved && <div class="success">Depoimentos salvos com sucesso.</div>}
+
+  <!-- Instrução de upload -->
+  <div class="upload-tip">
+    <span class="upload-tip-icon">💡</span>
+    <p>
+      Para trocar uma imagem: coloque o arquivo na pasta
+      <code>public/images/</code> do projeto e cole o caminho abaixo
+      no formato <code>/images/nome-do-arquivo.png</code>
+    </p>
+  </div>
+
+  <form id="testimonials-form">
+    {c.testimonials.map((t: any, i: number) => (
+      <div class="card">
+        <div class="card-num">
+          <span class="num-badge">{i + 1}</span>
+          <h2>Depoimento — {t.name}</h2>
+        </div>
+
+        <div class="dep-grid">
+          <!-- Preview da imagem -->
+          <div class="dep-preview">
+            <p class="preview-label">Preview atual</p>
+            <div class="preview-frame" id={`preview-frame-${i}`}>
+              {t.image ? (
+                <img
+                  id={`preview-img-${i}`}
+                  src={t.image}
+                  alt={`Depoimento ${t.name}`}
+                  style="width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; border-radius: 10px;"
+                />
+              ) : (
+                <div id={`preview-img-${i}`} class="no-image">Sem imagem</div>
+              )}
+            </div>
+          </div>
+
+          <!-- Campos -->
+          <div class="dep-fields">
+            <div class="two-col">
+              <Field label="Nome do aluno">
+                <input type="text" name={`name_${i}`} value={t.name} placeholder="Ex: Ricardo" />
+              </Field>
+              <Field label="Cargo / Contexto">
+                <input type="text" name={`role_${i}`} value={t.role} placeholder="Aluno" />
+              </Field>
+            </div>
+
+            <Field label="Texto do depoimento">
+              <textarea name={`text_${i}`} rows={3}>{t.text}</textarea>
+            </Field>
+
+            <Field label="Caminho da imagem" hint="Ex: /images/dep-ricardo.png — coloque o arquivo em public/images/">
+              <input
+                type="text"
+                name={`image_${i}`}
+                value={t.image || ''}
+                placeholder="/images/dep-nome.png"
+                oninput={`updatePreview(${i}, this.value)`}
+              />
+            </Field>
+          </div>
+        </div>
+      </div>
+    ))}
+
+    <input type="hidden" name="count" value={c.testimonials.length} />
+
+    <div class="form-actions">
+      <button type="submit" class="btn" id="save-btn">Salvar depoimentos</button>
+    </div>
+  </form>
+</AdminLayout>
+
+<style>
+  .upload-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    background: rgba(99,102,241,0.07);
+    border: 1px solid rgba(99,102,241,0.2);
+  }
+
+  .upload-tip-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  .upload-tip p {
+    font-size: 13px;
+    color: #B8B8D0;
+    line-height: 1.6;
+  }
+
+  .upload-tip code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    background: rgba(99,102,241,0.15);
+    color: #A5B4FC;
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  /* Layout do card de depoimento */
+  .dep-grid {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .dep-preview { display: flex; flex-direction: column; gap: 6px; }
+
+  .preview-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #5E5E78;
+  }
+
+  .preview-frame {
+    width: 160px;
+    height: 220px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #0A0A16;
+    border: 1px solid #2A2A42;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .no-image {
+    font-size: 11px;
+    color: #5E5E78;
+    text-align: center;
+  }
+
+  .dep-fields { min-width: 0; }
+</style>
+
+<script>
+  function updatePreview(i: number, path: string) {
+    const container = document.getElementById(`preview-frame-${i}`)!;
+    let img = document.getElementById(`preview-img-${i}`) as HTMLImageElement | null;
+
+    if (!path) {
+      if (img) { img.style.display = 'none'; }
+      return;
+    }
+
+    if (!img || img.tagName !== 'IMG') {
+      container.innerHTML = '';
+      img = document.createElement('img');
+      img.id = `preview-img-${i}`;
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:10px;';
+      container.appendChild(img);
+    }
+
+    img.src = path;
+    img.style.display = 'block';
+  }
+
+  (window as any).updatePreview = updatePreview;
+
+  const form  = document.getElementById('testimonials-form') as HTMLFormElement;
+  const btn   = document.getElementById('save-btn') as HTMLButtonElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.textContent = 'Salvando...';
+    btn.disabled = true;
+
+    const data = Object.fromEntries(new FormData(form));
+    const res = await fetch('/api/admin/save-testimonials', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      window.location.href = '/admin/testimonials?saved=1';
+    } else {
+      btn.textContent = 'Salvar depoimentos';
+      btn.disabled = false;
+      alert('Erro ao salvar.');
+    }
+  });
+</script>

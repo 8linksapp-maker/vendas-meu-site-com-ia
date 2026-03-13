@@ -1,0 +1,15 @@
+---
+// components/admin/Field.astro
+// Wrapper estrutural de campo de formulário.
+// Sem estilos próprios — todos os estilos vêm do AdminLayout (is:global).
+interface Props {
+  label: string;
+  hint?: string;
+}
+const { label, hint } = Astro.props;
+---
+<div class="field-wrap">
+  <label class="field-label">{label}</label>
+  <slot />
+  {hint && <p class="field-hint">{hint}</p>}
+</div>

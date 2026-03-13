@@ -1,0 +1,83 @@
+---
+// pages/admin/story.astro
+// Painel admin: edição da seção "Sobre / História" — imagem, título, parágrafos.
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import Field from '../../components/admin/Field.astro';
+import { SESSION_COOKIE, verifyToken } from '../../utils/auth';
+
+const token = Astro.cookies.get(SESSION_COOKIE)?.value || '';
+if (!(await verifyToken(token))) return Astro.redirect('/admin/login');
+
+const raw = readFileSync(join(process.cwd(), 'src/data/content.json'), 'utf-8');
+const c = JSON.parse(raw);
+const saved = Astro.url.searchParams.get('saved') === '1';
+---
+<AdminLayout title="Sobre / História — Admin">
+  <h1>◆ Sobre / História</h1>
+  {saved && <div class="success">Alterações salvas com sucesso.</div>}
+
+  <form id="story-form">
+    <div class="card">
+      <h2>Imagem do autor</h2>
+      <div class="dep-grid" style="display: grid; grid-template-columns: 140px 1fr; gap: 20px; align-items: start;">
+        <div>
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5E5E78;margin-bottom:6px;">Preview</p>
+          <div id="story-preview" style="width:140px;height:180px;border-radius:10px;overflow:hidden;background:#0A0A16;border:1px solid #2A2A42;">
+            {c.story.image && <img src={c.story.image} style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:10px;" />}
+          </div>
+        </div>
+        <Field label="Caminho da imagem" hint="Ex: /images/bruno.png">
+          <input type="text" name="image" value={c.story.image || ''} />
+        </Field>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Texto</h2>
+      <Field label="Título da seção">
+        <input type="text" name="title" value={c.story.title} />
+      </Field>
+
+      {c.story.paragraphs.map((p: string, i: number) => (
+        <Field label={`Parágrafo ${i + 1}`}>
+          <textarea name={`p_${i}`} rows={4}>{p}</textarea>
+        </Field>
+      ))}
+      <input type="hidden" name="p_count" value={c.story.paragraphs.length} />
+    </div>
+
+    <div class="card">
+      <h2>Credenciais / Prova de autoridade</h2>
+      {(c.story.credentials || []).map((cr: any, i: number) => (
+        <div class="two-col" style="margin-bottom:10px;">
+          <Field label={i === 0 ? 'Emoji' : ''}>
+            <input type="text" name={`cred_icon_${i}`} value={cr.icon} style="font-size:20px;" />
+          </Field>
+          <Field label={i === 0 ? 'Texto' : ''}>
+            <input type="text" name={`cred_text_${i}`} value={cr.text} />
+          </Field>
+        </div>
+      ))}
+      <input type="hidden" name="cred_count" value={(c.story.credentials || []).length} />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn" id="save-btn">Salvar</button>
+    </div>
+  </form>
+
+  <script>
+    const form = document.getElementById('story-form') as HTMLFormElement;
+    const btn = document.getElementById('save-btn') as HTMLButtonElement;
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.textContent = 'Salvando...'; btn.disabled = true;
+      const data = Object.fromEntries(new FormData(form));
+      const res = await fetch('/api/admin/save-story', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      if (res.ok) window.location.href = '/admin/story?saved=1';
+      else { btn.textContent = 'Salvar'; btn.disabled = false; alert('Erro ao salvar.'); }
+    });
+  </script>
+</AdminLayout>

@@ -1,0 +1,69 @@
+---
+// pages/admin/guarantee.astro
+// Painel admin: edição da garantia, CTA final e stats do hero.
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import Field from '../../components/admin/Field.astro';
+import { SESSION_COOKIE, verifyToken } from '../../utils/auth';
+
+const token = Astro.cookies.get(SESSION_COOKIE)?.value || '';
+if (!(await verifyToken(token))) return Astro.redirect('/admin/login');
+
+const raw = readFileSync(join(process.cwd(), 'src/data/content.json'), 'utf-8');
+const c = JSON.parse(raw);
+const saved = Astro.url.searchParams.get('saved') === '1';
+---
+<AdminLayout title="Garantia & CTA — Admin">
+  <h1>◐ Garantia, CTA Final & Urgência</h1>
+  {saved && <div class="success">Alterações salvas com sucesso.</div>}
+
+  <form id="extras-form">
+
+    <div class="card">
+      <h2>Barra de urgência (topo)</h2>
+      <Field label="Texto da barra" hint="Aparece fixo no topo da página com timer regressivo">
+        <input type="text" name="urgency_text" value={c.urgency.text} />
+      </Field>
+      <label class="toggle-row">
+        <input type="checkbox" name="urgency_active" checked={c.urgency.active} />
+        <span class="toggle-text">Exibir barra de urgência</span>
+      </label>
+    </div>
+
+    <div class="card">
+      <h2>Stats do Hero</h2>
+      <p class="field-hint" style="margin-bottom:16px;">Números exibidos abaixo do botão principal.</p>
+      <div style="display:grid;grid-template-columns:100px 1fr;gap:10px;">
+        {c.hero.stats.map((s: any, i: number) => (
+          <>
+            <Field label={i === 0 ? 'Valor' : ''}>
+              <input type="text" name={`stat_val_${i}`} value={s.value} />
+            </Field>
+            <Field label={i === 0 ? 'Label' : ''}>
+              <input type="text" name={`stat_label_${i}`} value={s.label} />
+            </Field>
+          </>
+        ))}
+      </div>
+      <input type="hidden" name="stats_count" value={c.hero.stats.length} />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn" id="save-btn">Salvar</button>
+    </div>
+  </form>
+
+  <script>
+    const form = document.getElementById('extras-form') as HTMLFormElement;
+    const btn = document.getElementById('save-btn') as HTMLButtonElement;
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.textContent = 'Salvando...'; btn.disabled = true;
+      const data = Object.fromEntries(new FormData(form));
+      const res = await fetch('/api/admin/save-guarantee', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      if (res.ok) window.location.href = '/admin/guarantee?saved=1';
+      else { btn.textContent = 'Salvar'; btn.disabled = false; alert('Erro ao salvar.'); }
+    });
+  </script>
+</AdminLayout>

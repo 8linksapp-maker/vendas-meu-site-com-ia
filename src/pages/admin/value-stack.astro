@@ -1,0 +1,76 @@
+---
+// pages/admin/value-stack.astro
+// Painel admin: edição do stack de valor — itens Base e Pro com preço de/por.
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import Field from '../../components/admin/Field.astro';
+import { SESSION_COOKIE, verifyToken } from '../../utils/auth';
+
+const token = Astro.cookies.get(SESSION_COOKIE)?.value || '';
+if (!(await verifyToken(token))) return Astro.redirect('/admin/login');
+
+const raw = readFileSync(join(process.cwd(), 'src/data/content.json'), 'utf-8');
+const c = JSON.parse(raw);
+const saved = Astro.url.searchParams.get('saved') === '1';
+---
+<AdminLayout title="Stack de Valor — Admin">
+  <h1>◈ Stack de Valor</h1>
+  {saved && <div class="success">Alterações salvas com sucesso.</div>}
+
+  <form id="stack-form">
+    <div class="card">
+      <h2>Itens do Plano Base</h2>
+      {c.valueStack.map((row: any, i: number) => (
+        <div style="display:grid;grid-template-columns:1fr 120px 100px;gap:10px;margin-bottom:12px;align-items:end;">
+          <Field label={i === 0 ? 'Item' : ''}>
+            <input type="text" name={`base_item_${i}`} value={row.item} />
+          </Field>
+          <Field label={i === 0 ? 'De (riscado)' : ''}>
+            <input type="text" name={`base_from_${i}`} value={row.from} placeholder="R$0" />
+          </Field>
+          <Field label={i === 0 ? 'Tag' : ''}>
+            <input type="text" name={`base_tag_${i}`} value={row.tag} placeholder="incluso" />
+          </Field>
+        </div>
+      ))}
+      <input type="hidden" name="base_count" value={c.valueStack.length} />
+    </div>
+
+    <div class="card">
+      <h2>Itens exclusivos do Plano Pro</h2>
+      <p class="field-hint" style="margin-bottom:16px;">Estes itens aparecem abaixo dos itens Base no card do Pro.</p>
+      {c.valueStackPro.map((row: any, i: number) => (
+        <div style="display:grid;grid-template-columns:1fr 120px 100px;gap:10px;margin-bottom:12px;align-items:end;">
+          <Field label={i === 0 ? 'Item' : ''}>
+            <input type="text" name={`pro_item_${i}`} value={row.item} />
+          </Field>
+          <Field label={i === 0 ? 'De (riscado)' : ''}>
+            <input type="text" name={`pro_from_${i}`} value={row.from} placeholder="R$0" />
+          </Field>
+          <Field label={i === 0 ? 'Tag' : ''}>
+            <input type="text" name={`pro_tag_${i}`} value={row.tag} placeholder="exclusivo Pro" />
+          </Field>
+        </div>
+      ))}
+      <input type="hidden" name="pro_count" value={c.valueStackPro.length} />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn" id="save-btn">Salvar</button>
+    </div>
+  </form>
+
+  <script>
+    const form = document.getElementById('stack-form') as HTMLFormElement;
+    const btn = document.getElementById('save-btn') as HTMLButtonElement;
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.textContent = 'Salvando...'; btn.disabled = true;
+      const data = Object.fromEntries(new FormData(form));
+      const res = await fetch('/api/admin/save-value-stack', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      if (res.ok) window.location.href = '/admin/value-stack?saved=1';
+      else { btn.textContent = 'Salvar'; btn.disabled = false; alert('Erro ao salvar.'); }
+    });
+  </script>
+</AdminLayout>

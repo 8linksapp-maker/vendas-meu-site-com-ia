@@ -1,0 +1,100 @@
+---
+// pages/admin/faq.astro
+// Painel admin: edição das perguntas frequentes.
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import Field from '../../components/admin/Field.astro';
+import { SESSION_COOKIE, verifyToken } from '../../utils/auth';
+
+const token = Astro.cookies.get(SESSION_COOKIE)?.value || '';
+const valid = await verifyToken(token);
+if (!valid) return Astro.redirect('/admin/login');
+
+const raw = readFileSync(join(process.cwd(), 'src/data/content.json'), 'utf-8');
+const c = JSON.parse(raw);
+const saved = Astro.url.searchParams.get('saved') === '1';
+---
+<AdminLayout title="FAQ — Admin">
+  <h1>◎ FAQ</h1>
+
+  {saved && <div class="success">FAQ salvo com sucesso.</div>}
+
+  <form id="faq-form">
+    {c.faq.map((f: any, i: number) => (
+      <div class="card">
+        <div class="card-num">
+          <span class="num-badge">{i + 1}</span>
+          <h2>Pergunta</h2>
+        </div>
+
+        <Field label="Pergunta">
+          <input type="text" name={`q_${i}`} value={f.q} />
+        </Field>
+
+        <Field label="Resposta" hint="Seja direto — máximo 3 linhas">
+          <textarea name={`a_${i}`} rows={4}>{f.a}</textarea>
+        </Field>
+      </div>
+    ))}
+
+    <input type="hidden" name="count" value={c.faq.length} />
+
+    <div class="form-actions">
+      <button type="submit" class="btn" id="save-btn">Salvar FAQ</button>
+    </div>
+  </form>
+</AdminLayout>
+
+<style>
+  .card-num {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .card-num h2 { margin-bottom: 0; }
+
+  .num-badge {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    background: rgba(99,102,241,0.15);
+    color: #A5B4FC;
+    border: 1px solid rgba(99,102,241,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 32px;
+  }
+</style>
+
+<script>
+  const form = document.getElementById('faq-form') as HTMLFormElement;
+  const btn  = document.getElementById('save-btn') as HTMLButtonElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.textContent = 'Salvando...';
+    btn.disabled = true;
+
+    const data = Object.fromEntries(new FormData(form));
+    const res = await fetch('/api/admin/save-faq', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      window.location.href = '/admin/faq?saved=1';
+    } else {
+      btn.textContent = 'Salvar FAQ';
+      btn.disabled = false;
+      alert('Erro ao salvar.');
+    }
+  });
+</script>

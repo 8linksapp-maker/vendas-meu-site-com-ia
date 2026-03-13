@@ -1,0 +1,256 @@
+{
+  "hero": {
+    "badge": "Mais velocidade, menos trabalho, tudo automático",
+    "headline": "Crie sites profissionais com IA em 5 minutos",
+    "subheadline": "Sem programar. Sem WordPress. Sem pagar hospedagem. Nota 100 no Google — direto do zero ao deploy.",
+    "ctaBase": "Quero investir — Base 12x R$51,40",
+    "ctaPro": "Quero investir — Pro 12x R$103,11",
+    "stats": [
+      {
+        "value": "20+",
+        "label": "Anos em web"
+      },
+      {
+        "value": "15k",
+        "label": "Inscritos no YouTube"
+      },
+      {
+        "value": "100",
+        "label": "Nota PageSpeed"
+      },
+      {
+        "value": "0",
+        "label": "Reais de hospedagem"
+      }
+    ]
+  },
+  "story": {
+    "image": "/images/bruno.png",
+    "title": "Por que agora?",
+    "paragraphs": [
+      "Trabalho com web desde 2002. Dei aulas de HTML, CSS, Flash, Dreamweaver. Virei consultor de SEO, escrevi um best-seller na área, fui indicado 2 anos consecutivos ao prêmio de melhor profissional de SEO do Brasil.",
+      "Em 2021 me mudei para Chiang Mai — a capital mundial do SEO — e vi de perto o que os melhores do mundo estavam fazendo. JAMstack. Sites rápidos, seguros, sem WordPress, sem servidor, com custo zero de hospedagem.",
+      "A barreira sempre foi o desenvolvedor. Um site assim custava R$10.000–R$15.000 e levava meses. Eu usava esse método em silêncio desde 2023 — porque ainda era cedo para o Brasil.",
+      "Agora não é mais cedo. A IA chegou, eliminou a barreira técnica, e quem sair na frente vai dominar. Essa é a janela. E ela não vai ficar aberta para sempre."
+    ],
+    "credentials": [
+      {
+        "icon": "📖",
+        "text": "Autor do Smart Hat — best-seller de SEO"
+      },
+      {
+        "icon": "🎥",
+        "text": "Mais de 10 anos no YouTube"
+      },
+      {
+        "icon": "🌏",
+        "text": "Reconhecimento internacional"
+      }
+    ]
+  },
+  "whoIsFor": [
+    {
+      "icon": "🔍",
+      "title": "Profissional de SEO ou Marketing",
+      "description": "Quer entregar sites modernos, rápidos e ranqueados para clientes sem depender de dev."
+    },
+    {
+      "icon": "🚀",
+      "title": "Empreendedor Digital",
+      "description": "Quer ter presença online de qualidade sem pagar agência, sem mensalidade de hospedagem."
+    },
+    {
+      "icon": "💼",
+      "title": "Freelancer ou Agência",
+      "description": "Quer cobrar R$3.000–R$5.000 por sites que leva 5 minutos para criar e entregar."
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Jorge",
+      "role": "Aluno",
+      "text": "Tudo ok. Site no ar. Agora é aprender a modificar e subir atualizações ❤️",
+      "image": "/images/dep-jorge.png"
+    },
+    {
+      "name": "Edna",
+      "role": "Aluna",
+      "text": "Bom dia. Coloquei o site no ar essa madrugada. Uffa 😊",
+      "image": "/images/dep-edna.png"
+    },
+    {
+      "name": "Flaviane",
+      "role": "Aluna",
+      "text": "Site no ar! Gostaria de ver a aula de sexta-feira.",
+      "image": "/images/dep-flaviane.png"
+    },
+    {
+      "name": "João Paulo",
+      "role": "Aluno",
+      "text": "O site padrão está no ar. Agora preciso criar a versão do meu usando essa estrutura.",
+      "image": "/images/dep-joaopaulo.png"
+    },
+    {
+      "name": "Ricardo",
+      "role": "Aluno",
+      "text": "Segue o link do primeiro protótipo 🚀",
+      "image": "/images/dep-ricardo.png"
+    }
+  ],
+  "valueStack": [
+    {
+      "item": "6 Módulos completos de criação de sites com IA",
+      "from": "R$1.997",
+      "tag": "incluso"
+    },
+    {
+      "item": "Aulas ao vivo toda semana por 12 meses",
+      "from": "R$3.600",
+      "tag": "incluso"
+    },
+    {
+      "item": "CNX — CMS completo, substituto do WordPress",
+      "from": "R$2.400/ano",
+      "tag": "incluso"
+    },
+    {
+      "item": "Módulo 2 completo de SEO (on-page, off-page, E-E-A-T)",
+      "from": "R$997",
+      "tag": "incluso"
+    },
+    {
+      "item": "Suporte por 12 meses",
+      "from": "R$1.200",
+      "tag": "incluso"
+    },
+    {
+      "item": "Grupo exclusivo no WhatsApp com alunos e professor",
+      "from": "R$600",
+      "tag": "bônus"
+    }
+  ],
+  "valueStackPro": [
+    {
+      "item": "Tudo do plano Base",
+      "from": "",
+      "tag": "incluso"
+    },
+    {
+      "item": "Main CNX — painel que gerencia todos os seus sites",
+      "from": "R$2.997",
+      "tag": "exclusivo Pro"
+    }
+  ],
+  "comparison": [
+    {
+      "feature": "Hospedagem",
+      "wordpress": "R$50–200/mês",
+      "jamstack": "Grátis"
+    },
+    {
+      "feature": "Nota PageSpeed / SEO",
+      "wordpress": "40–70",
+      "jamstack": "100"
+    },
+    {
+      "feature": "Tempo de deploy",
+      "wordpress": "Horas a dias",
+      "jamstack": "5 minutos"
+    },
+    {
+      "feature": "Precisa de dev?",
+      "wordpress": "Sim",
+      "jamstack": "Não"
+    },
+    {
+      "feature": "Segurança",
+      "wordpress": "Vulnerável (plugins)",
+      "jamstack": "Zero banco de dados"
+    },
+    {
+      "feature": "Manutenção mensal",
+      "wordpress": "Constante",
+      "jamstack": "Zero"
+    },
+    {
+      "feature": "Migrar de WordPress",
+      "wordpress": "—",
+      "jamstack": "1 clique com CNX"
+    }
+  ],
+  "pricing": {
+    "base": {
+      "name": "Base",
+      "price": "12x de R$51,40",
+      "priceTotal": "ou R$497 à vista",
+      "period": "no cartão de crédito",
+      "description": "Tudo que você precisa para criar e ranquear sites profissionais com IA.",
+      "items": [
+        "6 módulos gravados",
+        "Aulas ao vivo toda semana",
+        "CNX — CMS completo incluso",
+        "Grupo exclusivo no WhatsApp",
+        "Acesso por 12 meses",
+        "Suporte via comunidade"
+      ],
+      "cta": "Quero investir agora — Base",
+      "link": "https://pay.kiwify.com.br/PriQV5V"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "12x de R$103,11",
+      "priceTotal": "ou R$997 à vista",
+      "period": "no cartão de crédito",
+      "description": "Para quem quer gerenciar múltiplos sites e ter acesso à ferramenta exclusiva.",
+      "badge": "Mais completo",
+      "items": [
+        "Tudo do plano Base",
+        "Main CNX — gerenciador de sites",
+        "Múltiplos domínios e projetos",
+        "Painel central de deployments",
+        "Grupo exclusivo no WhatsApp",
+        "Suporte prioritário"
+      ],
+      "cta": "Quero investir agora — Pro",
+      "link": "https://pay.kiwify.com.br/CTgOoMi"
+    }
+  },
+  "faq": [
+    {
+      "q": "Quantos sites posso fazer?",
+      "a": "Ilimitados. Cada site é um repositório gratuito no GitHub + deploy gratuito na Vercel. Não há limite."
+    },
+    {
+      "q": "Preciso saber programar?",
+      "a": "Não. Você viu ao vivo — nenhuma linha de código foi escrita. A IA escreve. Você direciona."
+    },
+    {
+      "q": "O que acontece com meu site depois dos 12 meses?",
+      "a": "O site continua no ar para sempre. O que encerra é o acesso ao curso e às aulas. O site é seu."
+    },
+    {
+      "q": "Posso usar um domínio que já tenho?",
+      "a": "Sim. Você aponta o domínio para a Vercel em menos de 5 minutos. Funciona com qualquer registrador."
+    },
+    {
+      "q": "O site já vem otimizado para SEO?",
+      "a": "Sim. Nota 100 no PageSpeed por padrão. Sitemap, meta tags, robots.txt, Core Web Vitals — tudo configurado automaticamente."
+    },
+    {
+      "q": "Tem como migrar do WordPress?",
+      "a": "Sim. O CNX tem um importador de WordPress nativo. Você exporta os posts e importa com 1 clique."
+    },
+    {
+      "q": "Que tipo de hospedagem vou usar?",
+      "a": "Vercel — a mesma plataforma da Netflix e Airbnb. Plano gratuito com 99.99% de uptime. Sem cartão de crédito."
+    },
+    {
+      "q": "Posso fazer e-commerce?",
+      "a": "Não é o foco. JAMstack é ideal para sites de conteúdo, SEO e geração de leads. Para e-commerce existem soluções específicas."
+    }
+  ],
+  "urgency": {
+    "text": "Oferta especial da live — preço sobe após encerramento",
+    "active": true
+  }
+}

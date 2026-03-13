@@ -1,0 +1,60 @@
+---
+// sections/Hero.astro
+// Seção hero — botão único "QUERO MEU SITE COM IA" com âncora para #pricing.
+interface Props {
+  badge: string;
+  headline: string;
+  subheadline: string;
+  stats: { value: string; label: string }[];
+}
+const { badge, headline, subheadline, stats } = Astro.props;
+---
+<section class="relative min-h-screen flex items-center justify-center grid-bg overflow-hidden px-6 py-24">
+  <!-- Glow orbs decorativos -->
+  <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-10 blur-3xl pointer-events-none"
+    style="background: radial-gradient(circle, #6366F1, transparent 70%);"></div>
+  <div class="absolute bottom-0 right-0 w-96 h-96 rounded-full opacity-5 blur-3xl pointer-events-none"
+    style="background: radial-gradient(circle, #A5B4FC, transparent 70%);"></div>
+
+  <div class="relative z-10 max-w-4xl mx-auto text-center">
+
+    <!-- Badge -->
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-semibold mb-8"
+      style="border-color: rgba(99,102,241,0.4); background: rgba(99,102,241,0.08); color: #A5B4FC;">
+      <span class="w-2 h-2 rounded-full animate-pulse" style="background: #A5B4FC;"></span>
+      {badge}
+    </div>
+
+    <!-- Headline -->
+    <h1 class="font-heading font-extrabold leading-tight mb-6"
+      style="font-size: clamp(2.4rem, 6vw, 4.5rem);">
+      <span class="gradient-text">{headline}</span>
+    </h1>
+
+    <!-- Subheadline -->
+    <p class="text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed"
+      style="color: rgba(255,255,255,0.65);">
+      {subheadline}
+    </p>
+
+    <!-- CTA único -->
+    <div class="flex justify-center mb-16">
+      <a href="#pricing"
+        class="font-heading font-extrabold px-10 py-5 rounded-2xl text-white text-xl tracking-wide transition-all hover:scale-105"
+        style="background: linear-gradient(135deg, #6366F1, #818CF8); box-shadow: 0 8px 40px rgba(99,102,241,0.45); letter-spacing: 0.03em;">
+        QUERO MEU SITE COM IA
+      </a>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
+      {stats.map(s => (
+        <div class="text-center">
+          <div class="font-heading font-extrabold text-3xl gradient-text-indigo mb-1">{s.value}</div>
+          <div class="text-sm" style="color: #6B7280;">{s.label}</div>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>

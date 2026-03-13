@@ -1,0 +1,191 @@
+---
+// sections/Testimonials.astro
+// Seção de prova social — prints do WhatsApp.
+// Clique na imagem abre lightbox fullscreen com zoom.
+interface Props {
+  items: { name: string; role: string; text: string; image?: string }[]
+}
+const { items } = Astro.props;
+---
+<section class="py-24 px-6">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="text-center mb-16">
+      <div class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-6"
+        style="background: rgba(99,102,241,0.1); color: #818CF8;">
+        Prova social
+      </div>
+      <h2 class="font-heading font-bold text-3xl md:text-4xl gradient-text">
+        Alunos colocando sites no ar
+      </h2>
+      <p class="mt-4 text-base" style="color: #6B7280;">
+        Conversas reais — do zero ao deploy em horas.
+      </p>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+      {items.map((t, idx) => (
+        <div class="rounded-2xl overflow-hidden flex flex-col"
+          style="border: 1px solid #1E1E2E; background: #111118;">
+
+          {t.image ? (
+            <button
+              type="button"
+              class="dep-img-btn"
+              data-src={t.image}
+              data-name={t.name}
+              aria-label={`Ver depoimento de ${t.name} em tamanho completo`}
+              style="display: block; background: none; border: none; padding: 0; cursor: zoom-in; position: relative; overflow: hidden;"
+            >
+              <img
+                src={t.image}
+                alt={`Depoimento de ${t.name}`}
+                class="dep-thumb"
+                style="width: 100%; display: block; max-height: 380px; object-fit: cover; object-position: top; transition: transform 0.3s ease;"
+              />
+              <div style="position: absolute; inset: 0; background: rgba(99,102,241,0); transition: background 0.2s; pointer-events: none;" class="dep-overlay"></div>
+              <!-- Ícone de lupa no hover -->
+              <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0); transition: transform 0.2s; width: 44px; height: 44px; border-radius: 50%; background: rgba(99,102,241,0.85); display: flex; align-items: center; justify-content: center; pointer-events: none;" class="dep-zoom-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                  <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+                </svg>
+              </div>
+              <!-- Fade bottom -->
+              <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 64px; background: linear-gradient(to top, #111118, transparent); pointer-events: none;"></div>
+            </button>
+          ) : (
+            <div class="p-6 flex-1 relative">
+              <div class="absolute top-4 right-5 font-heading font-black text-5xl leading-none"
+                style="color: rgba(99,102,241,0.12);">"</div>
+              <p class="text-sm leading-relaxed relative z-10" style="color: rgba(255,255,255,0.8);">{t.text}</p>
+            </div>
+          )}
+
+          <!-- Rodapé -->
+          <div class="px-4 py-3 flex items-center gap-3" style="border-top: 1px solid #1E1E2E;">
+            <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+              style="background: linear-gradient(135deg, #6366F1, #A5B4FC); color: #fff;">
+              {t.name.charAt(0)}
+            </div>
+            <div>
+              <p class="text-xs font-semibold" style="color: #fff;">{t.name}</p>
+              <p class="text-xs" style="color: #6B7280;">{t.role}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <p class="text-center mt-10 text-sm" style="color: #6B7280;">
+      💬 Clique nas imagens para ampliar · Prints reais do WhatsApp
+    </p>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div id="dep-lightbox" style="
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(8px);
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  cursor: zoom-out;
+">
+  <button id="dep-lightbox-close" aria-label="Fechar" style="
+    position: absolute;
+    top: 20px; right: 24px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+    z-index: 2;
+  ">✕</button>
+
+  <img id="dep-lightbox-img" src="" alt="" style="
+    max-width: min(520px, 90vw);
+    max-height: 90vh;
+    border-radius: 16px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    object-fit: contain;
+    display: block;
+    animation: lb-in 0.2s ease;
+  " />
+
+  <p id="dep-lightbox-name" style="
+    position: absolute;
+    bottom: 28px;
+    left: 50%; transform: translateX(-50%);
+    background: rgba(99,102,241,0.85);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 20px;
+    white-space: nowrap;
+  "></p>
+</div>
+
+<style>
+  @keyframes lb-in {
+    from { opacity: 0; transform: scale(0.93); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .dep-img-btn:hover .dep-thumb    { transform: scale(1.04); }
+  .dep-img-btn:hover .dep-overlay  { background: rgba(99,102,241,0.12) !important; }
+  .dep-img-btn:hover .dep-zoom-icon { transform: translate(-50%,-50%) scale(1) !important; }
+</style>
+
+<script>
+  const lightbox     = document.getElementById('dep-lightbox')!;
+  const lightboxImg  = document.getElementById('dep-lightbox-img') as HTMLImageElement;
+  const lightboxName = document.getElementById('dep-lightbox-name')!;
+  const closeBtn     = document.getElementById('dep-lightbox-close')!;
+
+  function openLightbox(src: string, name: string) {
+    lightboxImg.src = src;
+    lightboxImg.alt = `Depoimento de ${name}`;
+    lightboxName.textContent = name;
+    lightbox.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.style.display = 'none';
+    document.body.style.overflow = '';
+    lightboxImg.src = '';
+  }
+
+  // Botões de depoimento
+  document.querySelectorAll<HTMLButtonElement>('.dep-img-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const src  = btn.dataset.src  || '';
+      const name = btn.dataset.name || '';
+      openLightbox(src, name);
+    });
+  });
+
+  // Fechar ao clicar no botão
+  closeBtn.addEventListener('click', closeLightbox);
+
+  // Fechar ao clicar fora da imagem
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  // Fechar com ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>

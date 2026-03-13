@@ -1,0 +1,189 @@
+---
+// pages/admin/pricing.astro
+// Painel admin: edição de preços, links de checkout e urgência.
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import Field from '../../components/admin/Field.astro';
+import { SESSION_COOKIE, verifyToken } from '../../utils/auth';
+
+const token = Astro.cookies.get(SESSION_COOKIE)?.value || '';
+const valid = await verifyToken(token);
+if (!valid) return Astro.redirect('/admin/login');
+
+const raw = readFileSync(join(process.cwd(), 'src/data/content.json'), 'utf-8');
+const c = JSON.parse(raw);
+const saved = Astro.url.searchParams.get('saved') === '1';
+---
+<AdminLayout title="Preços & Links — Admin">
+  <h1>◈ Preços &amp; Links de Checkout</h1>
+
+  {saved && <div class="success">Alterações salvas com sucesso.</div>}
+
+  <form id="pricing-form">
+
+    <!-- Plano Base -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-badge card-badge--base">Base</span>
+        <h2>Plano Base</h2>
+      </div>
+
+      <div class="two-col">
+        <Field label="Preço exibido" hint='Ex: R$497'>
+          <input type="text" name="base_price" value={c.pricing.base.price} />
+        </Field>
+        <Field label="Texto do botão CTA">
+          <input type="text" name="base_cta" value={c.pricing.base.cta} />
+        </Field>
+      </div>
+
+      <Field label="Link de checkout" hint="Cole o link gerado na Kiwify">
+        <input type="url" name="base_link" value={c.pricing.base.link} placeholder="https://pay.kiwify.com.br/..." />
+      </Field>
+    </div>
+
+    <!-- Plano Pro -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-badge card-badge--pro">Pro</span>
+        <h2>Plano Pro</h2>
+      </div>
+
+      <div class="two-col">
+        <Field label="Preço exibido" hint='Ex: R$997'>
+          <input type="text" name="pro_price" value={c.pricing.pro.price} />
+        </Field>
+        <Field label="Texto do botão CTA">
+          <input type="text" name="pro_cta" value={c.pricing.pro.cta} />
+        </Field>
+      </div>
+
+      <Field label="Link de checkout" hint="Cole o link gerado na Kiwify">
+        <input type="url" name="pro_link" value={c.pricing.pro.link} placeholder="https://pay.kiwify.com.br/..." />
+      </Field>
+    </div>
+
+    <!-- Urgência -->
+    <div class="card">
+      <h2>Barra de urgência</h2>
+
+      <Field label="Texto da barra" hint="Aparece fixo no topo da página">
+        <input type="text" name="urgency_text" value={c.urgency.text} />
+      </Field>
+
+      <label class="toggle-row">
+        <input type="checkbox" name="urgency_active" checked={c.urgency.active} />
+        <span class="toggle-text">Exibir barra de urgência</span>
+      </label>
+    </div>
+
+    <!-- Botões do Hero -->
+    <div class="card">
+      <h2>Hero — Textos dos botões</h2>
+      <div class="two-col">
+        <Field label="Botão Base (hero)">
+          <input type="text" name="hero_cta_base" value={c.hero.ctaBase} />
+        </Field>
+        <Field label="Botão Pro (hero)">
+          <input type="text" name="hero_cta_pro" value={c.hero.ctaPro} />
+        </Field>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn" id="save-btn">
+        Salvar alterações
+      </button>
+    </div>
+  </form>
+</AdminLayout>
+
+<style>
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .card-header h2 { margin-bottom: 0; }
+
+  .card-badge {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .card-badge--base {
+    background: rgba(99,102,241,0.15);
+    color: #A5B4FC;
+    border: 1px solid rgba(99,102,241,0.3);
+  }
+  .card-badge--pro {
+    background: rgba(139,92,246,0.15);
+    color: #C4B5FD;
+    border: 1px solid rgba(139,92,246,0.3);
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    cursor: pointer;
+  }
+  .toggle-row input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #6366F1;
+    flex-shrink: 0;
+  }
+  .toggle-text {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #C4C4D4;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 4px;
+    padding-bottom: 32px;
+  }
+</style>
+
+<script>
+  const form = document.getElementById('pricing-form') as HTMLFormElement;
+  const btn  = document.getElementById('save-btn') as HTMLButtonElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.textContent = 'Salvando...';
+    btn.disabled = true;
+
+    const data = Object.fromEntries(new FormData(form));
+    const res = await fetch('/api/admin/save-pricing', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      window.location.href = '/admin/pricing?saved=1';
+    } else {
+      btn.textContent = 'Salvar alterações';
+      btn.disabled = false;
+      alert('Erro ao salvar. Tente novamente.');
+    }
+  });
+</script>

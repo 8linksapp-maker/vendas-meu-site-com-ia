@@ -1,0 +1,36 @@
+---
+// sections/UrgencyBar.astro
+// Barra de urgência no topo da página com timer regressivo.
+interface Props { text: string; active: boolean; }
+const { text, active } = Astro.props;
+---
+{active && (
+  <div class="bg-indigo/90 backdrop-blur text-white text-center py-2.5 px-4 text-sm font-semibold sticky top-0 z-50" style="background: linear-gradient(90deg, #4F46E5, #6366F1, #818CF8);">
+    <span class="opacity-90">⚡</span> {text}
+    &nbsp;—&nbsp;
+    <span id="urgency-timer" class="font-bold tabular-nums">carregando...</span>
+  </div>
+)}
+
+<script>
+  const el = document.getElementById('urgency-timer');
+  if (el) {
+    // Timer de 6 horas — reseta por sessão
+    const KEY = 'vendas_timer_end';
+    let end = parseInt(sessionStorage.getItem(KEY) || '0');
+    if (!end || end < Date.now()) {
+      end = Date.now() + 6 * 60 * 60 * 1000;
+      sessionStorage.setItem(KEY, String(end));
+    }
+    function update() {
+      const diff = end - Date.now();
+      if (diff <= 0) { el!.textContent = 'Oferta encerrada'; return; }
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      el!.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+    update();
+    setInterval(update, 1000);
+  }
+</script>

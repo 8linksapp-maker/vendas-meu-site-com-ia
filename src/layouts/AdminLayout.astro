@@ -1,0 +1,76 @@
+---
+// layouts/AdminLayout.astro
+// Layout base do painel admin da página de vendas.
+// CSS servido como arquivo estático puro (/admin.css) — zero processamento do Astro.
+interface Props { title?: string; }
+const { title = 'Admin — Página de Vendas' } = Astro.props;
+
+const pathname = Astro.url.pathname;
+
+const navItems = [
+  { href: '/admin/hero',         icon: '✦', label: 'Hero & Stats' },
+  { href: '/admin/story',        icon: '◆', label: 'Sobre / História' },
+  { href: '/admin/who',          icon: '◇', label: 'Para Quem É' },
+  { href: '/admin/testimonials', icon: '◉', label: 'Depoimentos' },
+  { href: '/admin/value-stack',  icon: '◈', label: 'Stack de Valor' },
+  { href: '/admin/comparison',   icon: '▦', label: 'Comparativo' },
+  { href: '/admin/pricing',      icon: '◎', label: 'Preços & Links' },
+  { href: '/admin/guarantee',    icon: '◐', label: 'Garantia & CTA' },
+  { href: '/admin/faq',          icon: '◑', label: 'FAQ' },
+];
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/admin.css" />
+</head>
+<body>
+  <aside class="adm-sidebar">
+    <div class="adm-sidebar-logo">
+      <div class="adm-logo-row">
+        <div class="adm-logo-icon">⚡</div>
+        <div>
+          <div class="adm-logo-text">Admin Vendas</div>
+          <div class="adm-logo-sub">Meu Site Com IA</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="adm-nav">
+      <div class="adm-nav-label">Conteúdo</div>
+      {navItems.map(item => (
+        <a href={item.href} class={pathname.startsWith(item.href) ? 'active' : ''}>
+          <span class="adm-nav-icon">{item.icon}</span>
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="adm-sidebar-footer">
+      <a href="/" target="_blank" class="adm-link-view">
+        <span>↗</span> Ver página ao vivo
+      </a>
+      <a href="/admin/logout" class="adm-link-exit">
+        <span>←</span> Sair
+      </a>
+    </div>
+  </aside>
+
+  <div class="adm-wrapper">
+    <header class="adm-topbar">
+      <span class="adm-topbar-crumb">Admin</span>
+      <span class="adm-topbar-sep">/</span>
+      <span class="adm-topbar-title">{title.replace(' — Admin', '')}</span>
+    </header>
+    <div class="adm-main">
+      <slot />
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,7 @@
+---
+// pages/admin/logout.astro
+// Rota de logout: limpa cookie e redireciona para o login.
+import { SESSION_COOKIE } from '../../utils/auth';
+Astro.cookies.delete(SESSION_COOKIE, { path: '/' });
+return Astro.redirect('/admin/login');
+---
